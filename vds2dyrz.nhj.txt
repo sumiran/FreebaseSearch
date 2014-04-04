@@ -1,0 +1,38 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch and 'origin/master' have diverged,
+# and have 1 and 1 different commit each, respectively.
+#   (use "git pull" to merge the remote branch into yours)
+#
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	deleted:    bin/FreeBaseSearch.class
+#	deleted:    bin/com/entities/Actor.class
+#	deleted:    bin/com/entities/Author.class
+#	deleted:    bin/com/entities/BusinessPerson.class
+#	deleted:    bin/com/entities/League.class
+#	deleted:    bin/com/entities/Person.class
+#	deleted:    bin/com/entities/SportsTeam.class
+#	deleted:    bin/commons-codec-1.6.jar
+#	deleted:    bin/commons-logging-1.1.3.jar
+#	deleted:    bin/fluent-hc-4.3.3.jar
+#	deleted:    bin/httpclient-4.3.3.jar
+#	deleted:    bin/httpclient-cache-4.3.3.jar
+#	deleted:    bin/httpcore-4.3.2.jar
+#	deleted:    bin/httpmime-4.3.3.jar
+#	modified:   src/FreeBaseSearch.java
+#	modified:   src/com/entities/Actor.java
+#	modified:   src/com/entities/Author.java
+#	modified:   src/com/entities/BusinessPerson.java
+#	modified:   src/com/entities/League.java
+#	modified:   src/com/entities/Person.java
+#	modified:   src/com/entities/SportsTeam.java
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	src/SearchTest.java
+

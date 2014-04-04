@@ -11,5 +11,8 @@
 	<classpathentry kind="lib" path="src/httpmime-4.3.3.jar"/>
 	<classpathentry kind="lib" path="src/json-path-0.9.0.jar"/>
 	<classpathentry kind="lib" path="src/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="jackson-annotations-2.2.3.jar"/>
+	<classpathentry kind="lib" path="jackson-core-2.2.3.jar"/>
+	<classpathentry kind="lib" path="jackson-databind-2.2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

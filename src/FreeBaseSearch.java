@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -16,6 +17,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * It still has some issues such as has some useless words, and some FreeBaseEntity did
@@ -50,7 +52,7 @@ public class FreeBaseSearch {
 	}
 	
 	static ArrayList<HashMap<String, Object>> infoBoxContentsList;
-	static HashMap<String, Object> infoBoxResult;
+	static HashMap<Object, Object> infoBoxResult;
 	@SuppressWarnings("unchecked")
 	public static void searchTest(String query) throws IOException, ParseException, org.json.simple.parser.ParseException
 	{        
@@ -172,10 +174,7 @@ public class FreeBaseSearch {
 					Map.Entry<String,Object> entry = (Entry<String, Object>) iter.next();
 				    if(!"text".equalsIgnoreCase(entry.getKey())){
 				        iter.remove();
-				    } else {
-			
-				    	System.out.println(entry.getValue());
-				    }
+				    } 
 				}
 				return obj;
 			} else {
@@ -203,9 +202,9 @@ public class FreeBaseSearch {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static HashMap<String, Object> dataResult(Object obj){
+	public static HashMap<Object, Object> dataResult(Object obj){
 		
-		HashMap<String, Object> result = new HashMap<String, Object>();
+		HashMap<Object, Object> result = new HashMap<Object, Object>();
 		for(Object object : (ArrayList<?>)obj){
 			Set<String> keys = ((HashMap<String, ?>)object).keySet();
 		
@@ -248,13 +247,9 @@ public class FreeBaseSearch {
 	
 	public static void main(String[] args) throws ParseException, IOException, org.json.simple.parser.ParseException
 	{
+		
 		topicSearch("/m/017nt");
-
-		/*for(Object o : infoBoxContentsList){
-			//System.out.println(((HashMap)o).keySet().toString());
-			System.out.println(o.toString());
-		}*/
-		System.out.println(infoBoxResult);
+		System.out.println(InfoBoxGenerator.printInfoToString(infoBoxResult));
 		
 	}
 }
