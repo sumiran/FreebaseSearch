@@ -14,5 +14,8 @@
 	<classpathentry kind="lib" path="jackson-annotations-2.2.3.jar"/>
 	<classpathentry kind="lib" path="jackson-core-2.2.3.jar"/>
 	<classpathentry kind="lib" path="jackson-databind-2.2.3.jar"/>
+	<classpathentry kind="lib" path="src/jackson-annotations-2.2.3.jar"/>
+	<classpathentry kind="lib" path="src/jackson-core-2.2.3.jar"/>
+	<classpathentry kind="lib" path="src/jackson-databind-2.2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
