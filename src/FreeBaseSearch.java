@@ -1,6 +1,12 @@
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,16 +24,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * It still has some issues such as has some useless words, and some FreeBaseEntity did
  * not include in the search filed, but the professor's demo has it, such as NBA  slogan part
  * 
- * 
- * 
- * 
- * @author Terrence
- *
  */
 
 @SuppressWarnings("deprecation")
@@ -245,11 +247,272 @@ public class FreeBaseSearch {
 		return key.substring(key.lastIndexOf("/")+1);
 	}
 	
-	public static void main(String[] args) throws ParseException, IOException, org.json.simple.parser.ParseException
+	public static HashMap<String, Object> jsonToHashMap(String jsonString) throws Exception
 	{
+		return new ObjectMapper().readValue(jsonString, new TypeReference<HashMap<String, Object>>(){});
+	}
+	
+	/*
+	 * Does the HTTP heavywork and returns an ArrayList of HashMaps (constructed from the JSON response) of the resultset.
+	 * Each element of the ArrayList corresponds to one result and each HashMap element holds the key-value pairs defining the result.
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<HashMap<String, Object>> freebaseMQLQuery(String query, String key) throws Exception {
+		String service_url = "https://www.googleapis.com/freebase/v1/mqlread";
+		String url = service_url + "?query=" + URLEncoder.encode(makeMQLQuery(query), "UTF-8") + "&key=" + key;
+		DefaultHttpClient httpclient = new DefaultHttpClient();
 		
+		HttpResponse response = httpclient.execute(new HttpGet(url));
+		JSONObject json_data = (JSONObject)(new JSONParser()).parse(EntityUtils.toString(response.getEntity()));
+		
+		HashMap<String,Object> result = jsonToHashMap(json_data.toString());
+
+		ArrayList<HashMap<String, Object>> searchResultSet = (ArrayList<HashMap<String, Object>>)result.get("result");
+		
+		return searchResultSet;
+	}
+	
+	/*
+	 * This type is used to store the relations of creators and their creations. Role is defined as either "BusinessPerson" or "Author" in our implementation scope.
+	 */
+	public static class Creator implements Comparable<Creator> {
+		public String name;
+		public String role;
+		public ArrayList<String> creations;
+		
+		public Creator() {name = ""; role=""; creations = new ArrayList<String>();}
+
+		/**
+		 * Used when sorting alphabetically by library sort method
+		 */
+		@Override
+		public int compareTo(Creator c) {
+			return name.compareTo(c.name);
+		}
+		
+		/*
+		 * Used to print the creator-creations relationships to string
+		 */
+		public String toString() {
+			String ret = "";
+			ret += name+" (as "+role+") created: ";
+			for(String creation : creations) {
+				ret += ("<"+creation+">, ");
+			}
+			
+			ret = ret.replaceAll(",\\s*$", "");
+			return ret;
+		}
+	}
+	
+	/*
+	 * This function parses the query result into our internal implementation of an ArrayList of Creator. It makes use of the idempotentInsert
+	 * function defined just below.
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Creator> getCreatedList(ArrayList<HashMap<String, Object>> queryResult) {
+		ArrayList<Creator> createdList = new ArrayList<Creator>();
+		
+		if(queryResult == null)	return createdList;
+		
+		for(HashMap<String, Object> resultItem : queryResult) {
+			
+			if(resultItem.containsKey("/organization/organization/founders")) {
+				ArrayList<String> founders = (ArrayList<String>)resultItem.get("/organization/organization/founders");
+				for(String founder : founders) {
+						idempotentInsert(createdList, founder, (String)resultItem.get("name"), "BusinessPerson");
+				}
+			}
+			
+			if(resultItem.containsKey("/book/written_work/author")) {
+				ArrayList<String> founders = (ArrayList<String>)resultItem.get("/book/written_work/author");
+				for(String founder : founders) {
+					idempotentInsert(createdList, founder, (String)resultItem.get("name"), "Author");
+				}
+			}
+		}
+		
+		return createdList;
+	}
+	
+	/*
+	 * Inserts a creator-creation relationship into the master array if it doesn't already exist.
+	 * It adds a creation to the existing creations of the creator if the creator is already represented by other
+	 * creations with the same role.
+	 */
+	public static void idempotentInsert(ArrayList<Creator> createdList, String creator, String creation, String role) {
+		boolean exists = false;
+		for(Creator c : createdList) {
+			if(c.name.equalsIgnoreCase(creator)) {
+				if(c.role.equals(role)) {
+					exists = true;
+					if(!c.creations.contains(creation)) {
+						c.creations.add(creation);
+					}
+				}
+			}
+		}
+		
+		if(!exists) {
+			Creator c = new Creator();
+			c.name = creator;
+			c.creations = new ArrayList<String>();
+			c.creations.add(creation);
+			c.role = role;
+			createdList.add(c);
+		}
+	}
+	
+	/*
+	 * Used to print the list of Creator objects to a string
+	 */
+	public static String printCreatedListToString(ArrayList<Creator> createdList) {
+		if((createdList == null) || (createdList.size() == 0)) {
+			System.out.println("Sorry, there are no results to display.");
+		}
+		
+		StringBuilder print = new StringBuilder("");
+		
+		Collections.sort(createdList);
+		int iterator = 1;
+		
+		for(Creator c : createdList) {
+			print.append((iterator++)+". "+c.toString());
+			print.append("\n");
+		}
+				
+		return print.toString();
+	}
+	
+	/*
+	 * Prepares the MQL query string for a "Who created [X]" query. It queries for both types, books and authors in one go.
+	 */
+	public static String makeMQLQuery(String term) {
+		String query = "[{\"name~=\": \"??\",  \"name\": null,  \"type|=\": [\"/book/book\",\"/organization/organization\"],\"/book/written_work/author\": [], \"/organization/organization/founders\": []}]";
+		query = query.replace("??", term.replace("\"","\\\""));
+		return query;
+	}
+	
+	/*
+	 * Extracts the "Lord of the Rings" term from "Who created Lord of the Rings?"
+	 */
+	public static String getObjectFromUserQuery(String whoCreatedQuery) {
+		return whoCreatedQuery.replaceAll("(?i)who created ", "").replace("?","");
+	}
+	
+	/*
+	 * Primitive command line argument parser. option must be specified with a dash (eg. -t)
+	 */
+	public static String getCommandlineParameter(String option, String[] params) {
+		int i = 0;
+		String returnVal = "";
+		while((i < params.length) && (!params[i].equalsIgnoreCase(option))) {
+			i++;
+		}
+		i += 1;
+		
+		if(i >= params.length)	return returnVal;
+		
+		if(!params[i].startsWith("\"")) {
+			returnVal = params[i];
+		}
+		else {
+			returnVal = params[i].substring(1);
+			i += 1;
+			while((i < params.length) && (!params[i].endsWith("\""))) {
+				returnVal += " "+params[i];
+				i++;
+			}
+			if(i < params.length) {
+				returnVal += " "+params[i].substring(0, params[i].length() - 1);
+			}
+		}
+		
+		return returnVal.trim();
+	}
+	
+	
+	/*
+	 * Reads an entire file into String
+	 */
+	public static String readEntireFile(String path) throws FileNotFoundException {
+		FileInputStream is = new FileInputStream(path);
+	    StringBuilder sb = new StringBuilder(512);
+	    Reader r = null;
+	    try {
+	        r = new InputStreamReader(is);
+	        int c = 0;
+	        while ((c = r.read()) != -1) {
+	            sb.append((char) c);
+	        }
+	    } catch (IOException e) {
+	        throw new RuntimeException(e);
+	    } finally {
+	    	try {
+	    		is.close();
+	    		r.close();
+	    	} catch(Exception e) {}
+	    }
+	    return sb.toString();
+	}
+	
+	public static void main(String[] args) throws Exception
+	{
+		System.out.println("New Ver");
 		topicSearch("/m/017nt");
-		System.out.println(InfoBoxGenerator.printInfoToString(infoBoxResult));
+
+
+		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-f","D:\\q2.txt","" ,"-t","question"}; //"-q","\"Who", "created","microsoft?\"","",
+		args = args2;
+		
+		String key = getCommandlineParameter("-key", args);
+		String fileName = getCommandlineParameter("-f", args);
+		String mode = getCommandlineParameter("-t", args);
+		String query = getCommandlineParameter("-q", args);
+		
+		System.out.println("Here's what I could figure out...");
+		System.out.println("Key (-key): \""+key+"\"");
+		System.out.println("Filename (-f): \""+fileName+"\"");
+		System.out.println("Mode (-t): \""+mode+"\"");
+		System.out.println("Query (-q): \""+query+"\"");
+		System.out.println("\nRunning the "+ (fileName.equals("")?"query from commandline":"queries from file") +" as a "+ (mode.equalsIgnoreCase("question")?"question":"infobox") +"...");
+		System.out.println("\n\n");
+		
+		ArrayList<String> queries = null; 
+		
+		if(!fileName.equals("")) {
+			try {
+				String newLineDelim = "\n";
+
+				//Use CRLF if executed in Windows
+				if(System.getProperty("os.name").toLowerCase().contains("windows")) {
+					newLineDelim = "\r\n";
+				}
+				
+				queries = new ArrayList<String>(Arrays.asList(readEntireFile(fileName).split(newLineDelim)));
+			} catch(Exception e) {
+				System.out.println("Could not read input file. This happened: ");
+				e.printStackTrace();
+			}
+		} else {
+			queries = new ArrayList<String>();
+			queries.add(query);
+		}
+		
+		
+		if(mode.equalsIgnoreCase("question")) {
+			for(String q : queries) {
+				if(!q.trim().equals("")) {
+					System.out.println("Executing query for "+q+": ");
+					
+					ArrayList<Creator> c = getCreatedList(freebaseMQLQuery(getObjectFromUserQuery(q), key));
+					System.out.println(printCreatedListToString(c));
+				}
+			}
+		} else {
+			
+		}
+		
 		
 	}
 }
