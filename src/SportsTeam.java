@@ -13,6 +13,10 @@ public class SportsTeam {
 	public ArrayList<PlayersRoster> playersRosters;
 	public String description;
 	public SportsTeam(){
+		this.sport = "";
+		this.arena = "";
+		this.founded = "";
+		this.description = "";
 		this.championships = new ArrayList<String>();
 		this.leagues = new ArrayList<String>();
 		this.locations = new ArrayList<String>();

@@ -80,10 +80,19 @@ public class FreeBaseSearch {
 	       HashMap<String,Object> o  = mapper.readValue(results.toJSONString(), HashMap.class);
 	       JsonNode jNode = mapper.valueToTree(results);
 	      
-	       
-	       
-	       
+	       /*if(!jNode.path("/business/board_member/organization_board_memberships").path("values").get(0).path("property").path("/organization/organization_board_membership/from").isMissingNode())
+	       System.out.println(jNode.path("/business/board_member/organization_board_memberships").path("values").get(0).path("property").path("/organization/organization_board_membership/from").path("values").get(0).path("text"));
+	       */
 	       objectTypeInitial(results);
+	       typeOfEntityInitial();
+	       System.out.println(help.typeOfEntity);
+	       businessPersonInit(jNode);
+	       authorInit(jNode);
+	       actorInit(jNode);
+	       leagueInit(jNode);
+	       sportsTeamInit(jNode);
+	       personInit(jNode);
+	       
 	       
 	       Set<String> key = o.keySet();
 	       infoBoxContentsList = new ArrayList<HashMap<String, Object>>();
@@ -108,26 +117,35 @@ public class FreeBaseSearch {
 	public static Person personInit(JsonNode node){
 		Person p = new Person();
 		int count = 0;
-		count = (int) Double.parseDouble(node.path("/people/person/date_of_birth").path("count").toString());
-		for(int i = 0;i < count; i ++){
-		p.birthday = node.path("/people/person/date_of_birth").path("values").get(i).path("text").toString();
+		if(!node.path("/people/person/date_of_birth").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/people/person/date_of_birth").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			p.birthday = node.path("/people/person/date_of_birth").path("values").get(i).path("text").toString();
+			}
 		}
-	 
-		count = (int) Double.parseDouble(node.path("/people/person/sibling_s").path("count").toString());
-		for(int i = 0;i < count; i ++){
-		p.siblings.add(node.path("/people/person/sibling_s").path("values").get(i).path("property").path("/people/sibling_relationship/sibling").path("values").get(0).path("text").toString());
+		if(!node.path("/people/person/sibling_s").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/people/person/sibling_s").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			p.siblings.add(node.path("/people/person/sibling_s").path("values").get(i).path("property").path("/people/sibling_relationship/sibling").path("values").get(0).path("text").toString());
+			}
 		}
-		count = (int) Double.parseDouble(node.path("/people/person/place_of_birth").path("count").toString());
-		for(int i = 0;i < count; i ++){
-		p.placeOfBirth = node.path("/people/person/place_of_birth").path("values").get(i).path("text").toString();
+		if(!node.path("/people/person/place_of_birth").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/people/person/place_of_birth").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			p.placeOfBirth = node.path("/people/person/place_of_birth").path("values").get(i).path("text").toString();
+			}
 		}
-		count = (int) Double.parseDouble(node.path("/people/person/spouse_s").path("count").toString());
-		for(int i = 0;i < count; i ++){
-		p.spouses.add(node.path("/people/person/spouse_s").path("values").get(i).path("property").path("/people/marriage/spouse").path("values").get(0).path("text").toString());
+		if(!node.path("/people/person/spouse_s").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/people/person/spouse_s").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			p.spouses.add(node.path("/people/person/spouse_s").path("values").get(i).path("property").path("/people/marriage/spouse").path("values").get(0).path("text").toString());
+			}
 		}
-		count = (int) Double.parseDouble(node.path("/common/topic/description").path("count").toString());
-		for(int i = 0;i < count; i ++){
-		p.description = node.path("/common/topic/description").path("values").get(0).path("value").toString();
+		if(!node.path("/common/topic/description").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/common/topic/description").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			p.description = node.path("/common/topic/description").path("values").get(0).path("value").toString();
+			}
 		}
 		return p;
 		
@@ -137,130 +155,184 @@ public class FreeBaseSearch {
 	public static Author authorInit(JsonNode node){
 		Author a = new Author();
 		int count = 0;
+		if(!node.path("/book/author/works_written").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/book/author/works_written").path("count").toString());
 		for(int i = 0;i < count; i ++){
 		a.books.add(node.path("/book/author/works_written").path("values").get(i).path("text").toString());
 		}
+		}
+		if(!node.path("/book/book_subject/works").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/book/book_subject/works").path("count").toString());
 		for(int i = 0;i < count; i ++){
 		a.booksAbout.add(node.path("/book/book_subject/works").path("values").get(i).path("text").toString());
 		}
+		}
+		if(!node.path("/influence/influence_node/influenced").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/influence/influence_node/influenced").path("count").toString());
 		for(int i = 0;i < count; i ++){
-		a.booksAbout.add(node.path("/influence/influence_node/influenced").path("values").get(i).path("text").toString());
+		a.influenced.add(node.path("/influence/influence_node/influenced").path("values").get(i).path("text").toString());
 		}
+		}
+		if(!node.path("/influence/influence_node/influenced_by").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/influence/influence_node/influenced_by").path("count").toString());
 		for(int i = 0;i < count; i ++){
-		a.booksAbout.add(node.path("/influence/influence_node/influenced_by").path("values").get(i).path("text").toString());
+		a.influencedBy.add(node.path("/influence/influence_node/influenced_by").path("values").get(i).path("text").toString());
 		}
-		
+		}
 		return a;
 	}
 	public static Actor actorInit(JsonNode node){
 		Actor a = new Actor();
 		int count = 0;
-		count = (int) Double.parseDouble(node.path("/film/actor/film").path("count").toString());
-		for(int i = 0;i < count; i ++){
+		if(!node.path("/film/actor/film").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/film/actor/film").path("count").toString());
+			for(int i = 0;i < count; i ++){
+				
+			a.characters.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/character").path("values").get(0).path("text").toString());
+			a.filmName.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/film").path("values").get(0).path("text").toString());
 			
-		a.characters.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/character").path("values").get(0).path("text").toString());
-		a.filmName.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/film").path("values").get(0).path("text").toString());
-		
+			}
 		}
 		return a;
 	}
 	public static BusinessPerson businessPersonInit(JsonNode node){
 		BusinessPerson bp = new BusinessPerson();
 		int count = 0;
-		count = (int) Double.parseDouble(node.path("/organization/organization_founder/organizations_founded").path("count").toString());
-		for(int i = 0;i < count; i ++){
-		bp.founded.add(node.path("/organization/organization_founder/organizations_founded").path("values").get(i).path("text").toString());
-		}
-		
-		BoardMember bm = new BoardMember();
-		count = (int) Double.parseDouble(node.path("/business/board_member/organization_board_memberships").path("count").toString());
-		for(int i = 0;i < count; i ++){
-			bm.organization = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").path("values").get(0).path("text").toString();
-			bm.title = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/title").path("values").get(0).path("text").toString();
-			bm.from = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/from").path("values").get(0).path("text").toString();
-			bm.role = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/role").path("values").get(0).path("text").toString();
-			bm.to = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/to").path("values").get(0).path("text").toString();
-			bp.boardMembers.add(bm);
-		}
-		
-		Leadership ls = new Leadership();
-		
-		count = (int) Double.parseDouble(node.path("/business/board_member/leader_of").path("count").toString());
-		for(int i = 0;i < count; i ++){
-			ls.from = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/from").path("values").get(0).path("text").toString();
-			ls.organization = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/organization").path("values").get(0).path("text").toString();
-			ls.role = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/role").path("values").get(0).path("text").toString();
-			ls.to = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/to").path("values").get(0).path("text").toString();
-			ls.title = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/title").path("values").get(0).path("text").toString();
-			bp.leaderships.add(ls);
+		if(!node.path("/organization/organization_founder/organizations_founded").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/organization/organization_founder/organizations_founded").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			bp.founded.add(node.path("/organization/organization_founder/organizations_founded").path("values").get(i).path("text").toString());
+			}
 		}
 		
 		
+		if(!node.path("/business/board_member/organization_board_memberships").path("count").isMissingNode())
+		{
+			BoardMember bm = new BoardMember();
+			count = (int) Double.parseDouble(node.path("/business/board_member/organization_board_memberships").path("count").toString());
+			for(int i = 0;i < count; i ++){
+				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").isMissingNode())
+				bm.organization = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/title").isMissingNode())
+				bm.title = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/title").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/from").isMissingNode())
+				bm.from = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/from").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/role").isMissingNode())
+				bm.role = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/role").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/to").isMissingNode())
+				bm.to = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/to").path("values").get(0).path("text").toString();
+				bp.boardMembers.add(bm);
+			}
+		}
+		
+		if(!node.path("/business/board_member/leader_of").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/business/board_member/leader_of").path("count").toString());
+			for(int i = 0;i < count; i ++){
+				Leadership ls = new Leadership();
+				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/from").isMissingNode())
+				ls.from = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/from").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/organization").isMissingNode())
+				ls.organization = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/organization").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/role").isMissingNode())
+				ls.role = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/role").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/to").isMissingNode())
+				ls.to = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/to").path("values").get(0).path("text").toString();
+				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/title").isMissingNode())
+				ls.title = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/title").path("values").get(0).path("text").toString();
+				bp.leaderships.add(ls);
+			}
+			
+		}
 		return bp;
 	}
 	public static League leagueInit(JsonNode node){
 		League l = new League();
 		int count = 0;
+		if(!node.path("/sports/sports_league/championship").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_league/championship").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			if(!node.path("/sports/sports_league/championship").isMissingNode())
 			l.championship = node.path("/sports/sports_league/championship").path("values").get(i).path("text").toString();
+			if(!node.path("/sports/sports_league/sport").isMissingNode())
 			l.sport = node.path("/sports/sports_league/sport").path("values").get(i).path("text").toString();
+			if(!node.path("/sports/sports_league/official_website").isMissingNode())
 			l.website = node.path("/common/topic/official_website").path("values").get(i).path("text").toString();
+			if(!node.path("/organization/organization/slogan").isMissingNode())
 			l.slogan = node.path("/organization/organization/slogan").path("values").get(i).path("text").toString();
+			if(!node.path("/organization/organization/description").isMissingNode())
 			l.description = node.path("/common/topic/description").path("values").get(i).path("value").toString();
 			
 		}
-		
+		}
+		if(!node.path("/sports/sports_league/teams").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_league/teams").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			if(!node.path("/sports/sports_league/teams").isMissingNode() && !node.path("/sports/sports_league/teams").path("values").get(i).path("property").path("/sports/sports_league_participation/team").isMissingNode())
 			l.teams.add(node.path("/sports/sports_league/teams").path("values").get(i).path("property").path("/sports/sports_league_participation/team").path("values").get(0).path("text").toString());
 		}
-		
+		}
 		return l;
 	}
 	public static void sportsTeamInit(JsonNode node){
 		SportsTeam st = new SportsTeam();
 		int count = 0;
+		if(!node.path("/sports/sports_team/sport").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/sport").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			if(!node.path("/sports/sports_team/sport").isMissingNode())
 			st.sport = node.path("/sports/sports_team/sport").path("values").get(i).path("text").toString();
+			if(!node.path("/sports/sports_team/arena_stadium").isMissingNode())
 			st.arena = node.path("/sports/sports_team/arena_stadium").path("values").get(i).path("text").toString();
 			
 		}
+		}
+		if(!node.path("/sports/sports_team/championships").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/championships").path("count").toString());
 		for(int i = 0; i < count; i++){
 			st.championships.add(node.path("/sports/sports_team/championships").path("values").get(i).path("text").toString());
 		}
+		}
+		if(!node.path("/sports/sports_team/coaches").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/coaches").path("count").toString());
 		for(int i = 0; i < count; i++){
 			Coach c = new Coach();
+			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/coach").isMissingNode())
 			c.name = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/coach").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").isMissingNode())
 			c.from = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/position").isMissingNode())
 			c.position = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/position").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/to").isMissingNode())
 			c.to = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/to").path("values").get(0).path("text").toString();
 			st.coaches.add(c);
 		}
+		}
+		if(!node.path("/sports/sports_team/location").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/location").path("count").toString());
 		for(int i = 0; i < count; i++){
 			st.locations.add(node.path("/sports/sports_team/location").path("values").get(i).path("text").toString());
 		}
+		}
+		if(!node.path("/sports/sports_team/roster").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/roster").path("count").toString());
 		for(int i = 0; i < count; i++){
 			PlayersRoster pr = new PlayersRoster();
+			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/player").isMissingNode())
 			pr.name = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/player").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/position").isMissingNode())
 			pr.position = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/position").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/from").isMissingNode())
 			pr.from = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/from").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/number").isMissingNode())
 			pr.number = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/number").path("values").get(0).path("text").toString();
+			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/to").isMissingNode())
 			pr.to = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/to").path("values").get(0).path("text").toString();
 			st.playersRosters.add(pr);
 		}
+		}
 	}
 	
-	public void typeOfEntityInitial(){
+	public static void typeOfEntityInitial(){
 		if(help.objectTypes.get("/people/person") == true){
 			help.typeOfEntity.put("Person", true);
 		}
