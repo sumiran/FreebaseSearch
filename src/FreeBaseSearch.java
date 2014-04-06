@@ -25,6 +25,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * It still has some issues such as has some useless words, and some FreeBaseEntity did
@@ -92,7 +93,12 @@ public class FreeBaseSearch {
 	       ObjectMapper mapper = new ObjectMapper();       
 	       JSONObject results = (JSONObject)json_data.get("property");
 	       HashMap<String,Object> o  = mapper.readValue(results.toJSONString(), HashMap.class);
-	       
+	       JsonNode jNode = mapper.valueToTree(results);
+	       System.out.println("birthday: " + jNode.path("/people/person/date_of_birth").path("values").get(0).path("text"));
+	       Person p = personInit(jNode);
+	       for(JsonNode n:	jNode.path("/people/person/date_of_birth").path("values")){
+	   		
+	   	}
 	       objectTypeInitial(results);
 	       Set<String> key = o.keySet();
 	       infoBoxContentsList = new ArrayList<HashMap<String, Object>>();
@@ -111,10 +117,129 @@ public class FreeBaseSearch {
 	       }
 	       
 	       dataSetParser();
-	       infoBoxContentsList = (ArrayList<HashMap<String, Object>>) dataParser(infoBoxContentsList);
-	       infoBoxResult = dataResult(infoBoxContentsList);
+
 	}
 
+	public static Person personInit(JsonNode node){
+		Person p = new Person();
+		int count = 0;
+		count = (int) Double.parseDouble(node.path("/people/person/date_of_birth").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		p.birthday = node.path("/people/person/date_of_birth").path("values").get(i).path("text").toString();
+		}
+	 
+		count = (int) Double.parseDouble(node.path("/people/person/sibling_s").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		p.siblings.add(node.path("/people/person/sibling_s").path("values").get(i).path("property").path("/people/sibling_relationship/sibling").path("values").get(0).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/people/person/place_of_birth").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		p.placeOfBirth = node.path("/people/person/place_of_birth").path("values").get(i).path("text").toString();
+		}
+		count = (int) Double.parseDouble(node.path("/people/person/spouse_s").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		p.spouses.add(node.path("/people/person/spouse_s").path("values").get(i).path("property").path("/people/marriage/spouse").path("values").get(0).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/common/topic/description").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		p.description = node.path("/common/topic/description").path("values").get(0).path("value").toString();
+		}
+		return p;
+		
+	}
+		
+	
+	public static Author authorInit(JsonNode node){
+		Author a = new Author();
+		int count = 0;
+		count = (int) Double.parseDouble(node.path("/book/author/works_written").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		a.books.add(node.path("/book/author/works_written").path("values").get(i).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/book/book_subject/works").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		a.booksAbout.add(node.path("/book/book_subject/works").path("values").get(i).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/influence/influence_node/influenced").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		a.booksAbout.add(node.path("/influence/influence_node/influenced").path("values").get(i).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/influence/influence_node/influenced_by").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		a.booksAbout.add(node.path("/influence/influence_node/influenced_by").path("values").get(i).path("text").toString());
+		}
+		
+		return a;
+	}
+	public static Actor actorInit(JsonNode node){
+		Actor a = new Actor();
+		int count = 0;
+		count = (int) Double.parseDouble(node.path("/film/actor/film").path("count").toString());
+		for(int i = 0;i < count; i ++){
+			
+		a.characters.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/character").path("values").get(0).path("text").toString());
+		a.filmName.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/film").path("values").get(0).path("text").toString());
+		
+		}
+		return a;
+	}
+	public static BusinessPerson businessPersonInit(JsonNode node){
+		BusinessPerson bp = new BusinessPerson();
+		int count = 0;
+		count = (int) Double.parseDouble(node.path("/organization/organization_founder/organizations_founded").path("count").toString());
+		for(int i = 0;i < count; i ++){
+		bp.founded.add(node.path("/organization/organization_founder/organizations_founded").path("values").get(i).path("text").toString());
+		}
+		
+		BoardMember bm = new BoardMember();
+		count = (int) Double.parseDouble(node.path("/business/board_member/organization_board_memberships").path("count").toString());
+		for(int i = 0;i < count; i ++){
+			bm.organization = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").path("values").get(0).path("text").toString();
+			bm.title = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/title").path("values").get(0).path("text").toString();
+			bm.from = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/from").path("values").get(0).path("text").toString();
+			bm.role = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/role").path("values").get(0).path("text").toString();
+			bm.to = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/to").path("values").get(0).path("text").toString();
+			bp.boardMembers.add(bm);
+		}
+		
+		Leadership ls = new Leadership();
+		
+		count = (int) Double.parseDouble(node.path("/business/board_member/leader_of").path("count").toString());
+		for(int i = 0;i < count; i ++){
+			ls.from = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/from").path("values").get(0).path("text").toString();
+			ls.organization = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/organization").path("values").get(0).path("text").toString();
+			ls.role = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/role").path("values").get(0).path("text").toString();
+			ls.to = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/to").path("values").get(0).path("text").toString();
+			ls.title = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/title").path("values").get(0).path("text").toString();
+			bp.leaderships.add(ls);
+		}
+		
+		
+		return bp;
+	}
+	public static League leagueInit(JsonNode node){
+		League l = new League();
+		int count = 0;
+		count = (int) Double.parseDouble(node.path("/sports/sports_league/championship").path("count").toString());
+		for(int i = 0;i < count; i ++){
+			l.championship = node.path("/sports/sports_league/championship").path("values").get(i).path("text").toString();
+			l.sport = node.path("/sports/sports_league/sport").path("values").get(i).path("text").toString();
+			l.website = node.path("/common/topic/official_website").path("values").get(i).path("text").toString();
+			l.slogan = node.path("/organization/organization/slogan").path("values").get(i).path("text").toString();
+			l.description = node.path("/common/topic/description").path("values").get(i).path("value").toString();
+			
+		}
+		
+		count = (int) Double.parseDouble(node.path("/sports/sports_league/teams").path("count").toString());
+		for(int i = 0;i < count; i ++){
+			l.teams.add(node.path("/sports/sports_league/teams").path("values").get(i).path("property").path("/sports/sports_league_participation/team").path("values").get(0).path("text").toString());
+		}
+		
+		return l;
+	}
+	public static void sportsTeamInit(JsonNode node){
+		
+	}
 	/**
 	 * initial object types, define the type of the query result
 	 * @param results the json object from query
@@ -149,80 +274,7 @@ public class FreeBaseSearch {
 			o = mapHandler(o);
 		}
 	}
-	/**
-	 * recusively go through the Hashmap, and delete useless entries
-	 * all the useless key values.
-	 * @param obj
-	 * @return obj 
-	 */
-	@SuppressWarnings("unchecked")
-	public static Object dataParser(Object obj){
-		
-		if(obj instanceof HashMap){
-			Iterator<?> iter = ((HashMap<?, ?>) obj).entrySet().iterator();
-		
-			while (iter.hasNext()) {
-			    Map.Entry<String,Object> entry = (Entry<String, Object>) iter.next();
-			   
-			    if("valueType".equalsIgnoreCase(entry.getKey())||"count".equalsIgnoreCase(entry.getKey())){
-			        iter.remove();
-			    }
-			}
-			
-			if(((HashMap<?, ?>)(obj)).containsKey("text")){
-				iter = ((HashMap<?, ?>) obj).entrySet().iterator();
-				while (iter.hasNext()) {
-				
-					Map.Entry<String,Object> entry = (Entry<String, Object>) iter.next();
-				    if(!"text".equalsIgnoreCase(entry.getKey())){
-				        iter.remove();
-				    } 
-				}
-				return obj;
-			} else {
-			
-				obj = mapHandler((HashMap<String, Object>)obj);
-				Set<String> key = ((HashMap<String, ?>)obj).keySet();
-				for(String k : key){
-					dataParser(((HashMap<?, ?>) obj).get(k));
-				}
-				
-			}
-		}
-		
-		if(obj instanceof ArrayList){
-			for(Object o : (ArrayList<?>)obj){
-				dataParser(o);
-			}
-		}
-		return obj;
-		
-	}
-	/**
-	 * Finalize the final output
-	 * @param obj
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static HashMap<Object, Object> dataResult(Object obj){
-		
-		HashMap<Object, Object> result = new HashMap<Object, Object>();
-		for(Object object : (ArrayList<?>)obj){
-			Set<String> keys = ((HashMap<String, ?>)object).keySet();
-		
-			for(String o : keys){
-				HashMap<?, ?> values = (HashMap<?, ?>) ((HashMap<?, ?>)object).get(o);
-				ArrayList<Object> value = (ArrayList<Object>)(((HashMap<?, ?>)values).get("values"));
-				ArrayList<String> text = new ArrayList<String>();
-		
-				for(Object map : value){
-					text.addAll(((HashMap<?, String>)map).values());
-				}
-				result.put(o, text);
-			}
-		}
-		return result;
-	}
+
 	/**
 	 * Refine the key name of the hashmap
 	 * @param map
@@ -460,9 +512,12 @@ public class FreeBaseSearch {
 	{
 		System.out.println("New Ver");
 		topicSearch("/m/017nt");
+		
 
-
-		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-f","D:\\q2.txt","" ,"-t","question"}; //"-q","\"Who", "created","microsoft?\"","",
+		return;
+		
+		/*
+		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-q","" ,"-t","question"}; //"-q","\"Who", "created","microsoft?\"","",
 		args = args2;
 		
 		String key = getCommandlineParameter("-key", args);
@@ -512,7 +567,7 @@ public class FreeBaseSearch {
 		} else {
 			
 		}
-		
+		*/
 		
 	}
 }
