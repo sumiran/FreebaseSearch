@@ -36,24 +36,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SuppressWarnings("deprecation")
 public class FreeBaseSearch {
 	
-	final static String[] freeBaseEntities = {"/people/person","/organization/organization_founder",
-			"/business/board_member","/book/author","/film/actor","/sports/sports_league",
-			"/sports/sports_team","/sports/professional_sports_team","/common/topic/description"};
-	static HashMap<String, Boolean> objectTypes;
-	static {
-		HashMap<String, Boolean> map = new HashMap<String, Boolean>();
-		map.put("/people/person", false);
-		map.put("/book/author", false);
-		map.put("/film/actor", false);
-		map.put("/tv/tv_actor", false);
-		map.put("/organization/organization_founder", false);
-		map.put("/business/board_member", false);
-		map.put("/sports/sports_league", false);
-		map.put("/sports/sports_team", false);
-		map.put("/sports/professional_sports_team", false);
-		objectTypes = map;
-	}
 	
+	static Helper help;
 	static ArrayList<HashMap<String, Object>> infoBoxContentsList;
 	static HashMap<Object, Object> infoBoxResult;
 	@SuppressWarnings("unchecked")
@@ -79,6 +63,7 @@ public class FreeBaseSearch {
 	@SuppressWarnings("unchecked")
 	public static void topicSearch(String mid) throws ClientProtocolException, IOException, ParseException, org.json.simple.parser.ParseException
 	{
+			help = new Helper();
 		   String service_url = "https://www.googleapis.com/freebase/v1/topic";      
 	       String url = service_url + mid;
 
@@ -94,17 +79,17 @@ public class FreeBaseSearch {
 	       JSONObject results = (JSONObject)json_data.get("property");
 	       HashMap<String,Object> o  = mapper.readValue(results.toJSONString(), HashMap.class);
 	       JsonNode jNode = mapper.valueToTree(results);
-	       System.out.println("birthday: " + jNode.path("/people/person/date_of_birth").path("values").get(0).path("text"));
-	       Person p = personInit(jNode);
-	       for(JsonNode n:	jNode.path("/people/person/date_of_birth").path("values")){
-	   		
-	   	}
+	      
+	       
+	       
+	       
 	       objectTypeInitial(results);
+	       
 	       Set<String> key = o.keySet();
 	       infoBoxContentsList = new ArrayList<HashMap<String, Object>>();
 	       
 	       for(String k: key){
-	    	   for(String e: freeBaseEntities){    		 
+	    	   for(String e: Helper.freeBaseEntities){    		 
 	    		   if(FreeBaseSearch.checkIsSubKey(e, k)){
 	    			  
 	    			   String newKey = keyRename(k);
@@ -238,7 +223,62 @@ public class FreeBaseSearch {
 		return l;
 	}
 	public static void sportsTeamInit(JsonNode node){
-		
+		SportsTeam st = new SportsTeam();
+		int count = 0;
+		count = (int) Double.parseDouble(node.path("/sports/sports_team/sport").path("count").toString());
+		for(int i = 0;i < count; i ++){
+			st.sport = node.path("/sports/sports_team/sport").path("values").get(i).path("text").toString();
+			st.arena = node.path("/sports/sports_team/arena_stadium").path("values").get(i).path("text").toString();
+			
+		}
+		count = (int) Double.parseDouble(node.path("/sports/sports_team/championships").path("count").toString());
+		for(int i = 0; i < count; i++){
+			st.championships.add(node.path("/sports/sports_team/championships").path("values").get(i).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/sports/sports_team/coaches").path("count").toString());
+		for(int i = 0; i < count; i++){
+			Coach c = new Coach();
+			c.name = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/coach").path("values").get(0).path("text").toString();
+			c.from = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").path("values").get(0).path("text").toString();
+			c.position = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/position").path("values").get(0).path("text").toString();
+			c.to = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/to").path("values").get(0).path("text").toString();
+			st.coaches.add(c);
+		}
+		count = (int) Double.parseDouble(node.path("/sports/sports_team/location").path("count").toString());
+		for(int i = 0; i < count; i++){
+			st.locations.add(node.path("/sports/sports_team/location").path("values").get(i).path("text").toString());
+		}
+		count = (int) Double.parseDouble(node.path("/sports/sports_team/roster").path("count").toString());
+		for(int i = 0; i < count; i++){
+			PlayersRoster pr = new PlayersRoster();
+			pr.name = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/player").path("values").get(0).path("text").toString();
+			pr.position = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/position").path("values").get(0).path("text").toString();
+			pr.from = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/from").path("values").get(0).path("text").toString();
+			pr.number = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/number").path("values").get(0).path("text").toString();
+			pr.to = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/to").path("values").get(0).path("text").toString();
+			st.playersRosters.add(pr);
+		}
+	}
+	
+	public void typeOfEntityInitial(){
+		if(help.objectTypes.get("/people/person") == true){
+			help.typeOfEntity.put("Person", true);
+		}
+		if(help.objectTypes.get("/book/author") == true){
+			help.typeOfEntity.put("Author", true);
+		}
+		if(help.objectTypes.get("/film/actor") == true || help.objectTypes.get("/tv/tv_actor") == true){
+			help.typeOfEntity.put("Actor", true);
+		}
+		if(help.objectTypes.get("/organization/organization_founder") == true || help.objectTypes.get("/business/board_member") == true){
+			help.typeOfEntity.put("BusinessPerson", true);
+		}
+		if(help.objectTypes.get("/sports/sports_league") == true){
+			help.typeOfEntity.put("League", true);
+		}
+		if(help.objectTypes.get("/sports/sports_team") == true || help.objectTypes.get("/sports/professional_sports_team") == true){
+			help.typeOfEntity.put("SportsTeam", true);
+		}
 	}
 	/**
 	 * initial object types, define the type of the query result
@@ -250,8 +290,8 @@ public class FreeBaseSearch {
 	    
 	      for(Object value : values){
 	    	String type = ((JSONObject)value).get("id").toString();
-	    	if(objectTypes.containsKey(type)){
-	    		objectTypes.put(type, true);
+	    	if(help.objectTypes.containsKey(type)){
+	    		help.objectTypes.put(type, true);
 	    	}
 	      }
 	}
