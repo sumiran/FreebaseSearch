@@ -3,6 +3,10 @@ import java.util.ArrayList;
 
 public class Entity {
 	
+	/*
+	 * This class is a superclass for all Entity types. It provides basic functions to help print infobox in a format and holds certain other formatting constants
+	 */
+	
 	public static final int rowLength = 150;
 	public static final int headingColLength = 30;
 	

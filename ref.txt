@@ -1,0 +1,154 @@
+1. A. Nandy (as Author) created <Practical Numerical Analysis using Microsoft Excel>
+2. Alastair Day (as Author) created <Mastering Financial Mathematics in Microsoft Excel>
+3. Ana M. Villar (as Author) created <Microsoft Word>
+4. Andy Rathbone (as Author) created <MORE Microsoft Windows Me for Dummies>, <Microsoft Windows Me Millennium Edition for dummies>, and <Microsoft Windows 2000 Millennium Edition for Dummies, Pocket Edition>
+5. Ann Shaffer (as Author) created <New Perspectives on Microsoft Office 2007, First Course, Windows Vista Edition> and <Explore!  Microsoft Word 2000--Brief>
+6. Barry Gerber (as Author) created <Mastering Microsoft Exchange Server 2003>
+7. Ben Curry (as Author) created <Microsoft Office SharePoint Server 2007 Best Practices>
+8. Beverly Dretzke (as Author) created <Statistics with Microsoft Excel>
+9. Bill Gates (as Businessperson) created <Microsoft Corporation> and <Microsoft Research>
+10. Bill Jelen (as Author) created <Excel, Macros y VBA / VBA and Macros for Microsoft Excel>, <Charts and Graphs for Microsoft Office Excel 2007>, and <Guerilla data analysis using Microsoft Excel>
+11. Bryan Pfaffenberger (as Author) created <Running Microsoft Internet Explorer 5>, <Libro Oficial de Microsoft Internet Explorer>, <Official Microsoft Internet Explorer 4 book>, <Microsoft Windows 95 Internet kit>, <The offical Microsoft Internet Explorer book>, and <Dynamics of Microsoft Word>
+12. Casey D. Doyle (as Author) created <Microsoft Press Computer Dictionary>
+13. Charlie Russel (as Author) created <Running Microsoft Windows NT server 4.0>
+14. Christine Solomon (as Author) created <Developing applications with Microsoft Office> and <Microsoft Office 97 developer's handbook>
+15. Clara Varela (as Author) created <Microsoft Access 2003 Nociones Basicas> and <Microsoft Access 2003 Nivel Intermedio>
+16. Dan Gookin (as Author) created <How to use Microsoft Excel 2000> and <The Microsoft guide to managing memory with DOS 5>
+17. David B. Yoffie (as Author) created <Competing on Internet Time: Lessons from Netscape and Its Battle with Microsoft>
+18. David Beskeen (as Author) created <Microsoft Office 2007 Illustrated Introductory, Windows XP Edition>
+19. David Blatner (as Author) created <Microsoft Expression Design for Windows>
+20. David Bragg (as Author) created <Microsoft Word 98 for the Mac>
+21. David D. Busch (as Author) created <Microsoft Works Suite 99 at a glance>
+22. David Karlins (as Author) created <Teach yourself Microsoft FrontPage 98 in a week>, <Wild Web Graphics With Microsoft Image Composer>, and <Microsoft Works for Kids &amp; Parents>
+23. David Sceppa (as Author) created <Microsoft ADO.NET>
+24. Dean Takahashi (as Author) created <Opening the Xbox: Inside Microsoft's Plan to Unleash an Entertainment Revolution>
+25. Deborah Kurata (as Author) created <Doing objects in Microsoft Visual Basic 5.0> and <Doing objects in Microsoft Visual Basic 4.0>
+26. Diane Zak (as Author) created <Programming with Microsoft Visual Basic .NET> and <Microsoft Visual Basic 2005>
+27. Don Benage (as Author) created <Using Microsoft Visual studio>
+28. Dylan G. Penal (as Author) created <1 Way Microsoft Marches Strong>
+29. Ed Bott (as Author) created <La Biblia de Microsoft Office 2003>, <Faster Smarter Microsoft Windows XP>, <Office Max - Using Microsoft Office 4>, and <Practical Microsoft Windows 2000 Professional>
+30. Ed Tittel (as Author) created <Microsoft Windows NT 4 expert companion>, <Microsoft certified systems engineer.>, and <Guide to Microsoft Windows 2000 Core Technologies>
+31. Ed Wilson (as Author) created <Microsoft Windows PowerShell step by step>
+32. Elaine J Marmel (as Author) created <The essential Microsoft Word 2000 book>, <Troubleshooting Microsoft Office XP>, <Easy Microsoft Excel 97>, and <Microsoft Office Project 2007 All-in-One Desk Reference for Dummies>
+33. Faithe Wempen (as Author) created <Special Edition Using Microsoft Office Word 2007>, <Using Microsoft Home Essentials 98>, <Libro de Microsoft PowerPoint 2000 - Con Un CD-ROM>, <DDC Learning Microsoft Office XP Advanced Skills>, <Microsoft Access 2002 Fast &amp; Easy>, <DDC Learning Microsoft Publisher 2002>, <Practical Microsoft Windows 98>, <DDC Learning Microsoft Access 2002>, and <Microsoft Office 2007 for Seniors for Dummies>
+34. Fergal Grimes (as Author) created <Microsoft .Net for programmers>
+35. Fernando Rodriguez (as Author) created <Microsoft Excel 2003>
+36. Gary B. Shelly (as Author) created <Microsoft office> and <School Edition of Microsoft Office 2003>
+37. George Shepherd (as Author) created <Manuel de r?f?rence Microsoft Visual C++ .NET>
+38. Helen Feddema (as Author) created <Microsoft Access Version 2002 Inside Out>
+39. Inc. Systems (as Author) created <Bt-Microsoft Windo Hbk>
+40. James Michael Stewart (as Author) created <Guide to Microsoft Windows 2000 Core Technologies>
+41. Jan Ray (as Author) created <Microsoft Excel Simple Projects>
+42. Jason Gerend (as Author) created <Faster Smarter Microsoft Windows 98>
+43. Jerry Funk (as Author) created <Learn Microsoft Works in a day>
+44. Joan Preppernau (as Author) created <Microsoft  Windows Vista Step by Step>
+45. John Wood (as Author) created <Leaving Microsoft to Change the World>
+46. Joseph J. Adamski (as Author) created <New Perspectives on Microsoft Office Access 2007, Comprehensive>, <New Perspectives on Microsoft Office Access 2007, Introductory>, <Comprehensive Microsoft Access 2.0 for Windows :>, <E-Course Microsoft Office 97>, and <Introductory Microsoft Access 1.1 for Windows>
+47. Judy Mardar (as Author) created <Microsoft Office Excel 2003> and <Welcome To Microsoft Excel 2003>
+48. Julio M. Gonzalez (as Author) created <Microsoft Powerpoint>
+49. June Jamrich Parsons (as Author) created <New Perspectives on Microsoft Office Excel 2007, Comprehensive>, <New Perspectives on Microsoft Office Excel 2007, Introductory>, <A guide to Microsoft Windows 3.1>, <An introduction to Microsoft Windows 3.1>, and <Brief Microsoft Windows 3.1 and DOS>
+50. KOTABE (as Author) created <Global with Microsoft Encarta 98 Set>
+51. Kai-Fu Lee (as Businessperson) created <Microsoft Research Asia>
+52. Kate Gregory (as Author) created <Microsoft Visual C++ .NET 2003 Kick Start> and <Edicion Especial Microsoft Visual C++ 6>
+53. Kate J Chase (as Author) created <A Guide to Microsoft Office 2000>
+54. Kathy Short (as Author) created <Introduction to Microsoft Word and Excel>
+55. Kenneth Spencer (as Author) created <Microsoft Windows 2000 Server - Administracion> and <Cliente Servidor Con Microsoft Visual Basic>
+56. Kleber Stephenson (as Author) created <Microsoft Office 2003 killertips> and <Office 2003 / Microsoft Office 2003>
+57. Kris Jamsa (as Author) created <User's guide to Microsoft Windows 3.1>, <Microsoft QuickPascal programming>, and <Fastback Plus Microsoft Quick Reference>
+58. Larry Lozuk (as Author) created <West's Essentials of Microsoft Word for>, <Essentials of Microsoft Word for Windows>, <Understanding and using Microsoft Word for Windows>, and <Intermediate Microsoft Word for Windows 2.0>
+59. Laura Lemay (as Author) created <Microsoft FrontPage>
+60. Mark L. Chambers (as Author) created <Microsoft Office v.X for Mac>
+61. Marty Matthews (as Author) created <Microsoft Office Outlook 2007 QuickSteps>
+62. Mary Jo Foley (as Author) created <Microsoft 2.0: How Microsoft Plans to Stay Relevant in the Post-Gates Era>
+63. Melanie Gass (as Author) created <I Survived Microsoft Office 2007>
+64. Michael Halvorson (as Author) created <Microsoft Visual Basic 2008 Step by Step>, <Integrating Microsoft Office XP Illustrated Brief>, <Microsoft Office 2003 Inside Out>, <Running Guia Completa de Microsoft Office>, <Learn Microsoft Visual Basic 6.0 Now>, and <Microsoft Office 2000 Premium au quotidien>
+65. Michael Linenberger (as Author) created <Total Workday Control Using Microsoft Outlook, 2nd Ed.>
+66. Michael R. Middleton (as Author) created <Data Analysis Using Microsoft Excel>
+67. Microsoft Press (as Author) created <Microsoft Press Computer Dictionary, 4th Edition>
+68. Nabajyoti Barkakati (as Author) created <Microsoft C/C++ 7 developer's guide>
+69. Nancy Lewis (as Author) created <Easy Microsoft Excel 2003 (2nd Edition)>, <Easy Microsoft Office X>, and <Microsoft Windows 2000 Professional Quick Reference>
+70. Nathan Myhrvold (as Businessperson) created <Microsoft Research>
+71. Nevada Learning Series (as Author) created <Microsoft Excel 97 Quick Reference Guide>
+72. Paul Allen (as Businessperson) created <Microsoft Corporation>
+73. Paul Cornell (as Author) created <Accessing and Analyzing Data with Microsoft Excel>
+74. Paul Wray (as Author) created <Computer Literacy With Microsoft Office 2000> and <DDC Learning Microsoft Access 2002>
+75. Pawan K. Bhardwaj (as Author) created <MCTS 70-620 Microsoft Windows Vista>
+76. Peter Mason (as Author) created <Five-minute Microsoft Windows> and <Word processing with Microsoft Word for Windows>
+77. Qwiz (as Author) created <Trng TD Mac MS Wrd 6.0-Qwized Microsoft> and <Trng TD MS Wn 95 F/Wn 3.1-Qwiz Microsoft>
+78. Ralph Ruby (as Author) created <Microsoft works applications>
+79. Randall E. Stross (as Author) created <The Microsoft Way: The Real Story of How the Company Outsmarts Its Competition>
+80. Rebecca M. Riordan (as Author) created <Microsoft ADO.NET Step by Step>
+81. Richard A. McMahon (as Author) created <Microsoft Security Design Windows 2000>
+82. Richard Rashid (as Businessperson) created <Microsoft Research>
+83. Robert A. Radcliffe (as Author) created <Data handling utilities in Microsoft C>
+84. Robert Bobel (as Author) created <Active Introduction to Microsoft Windows 98>
+85. Robert D. Schneider (as Author) created <Microsoft SQL Server 2008 All-in-One Desk Reference for Dummies>
+86. Robert Lafore (as Author) created <Object-oriented programming in Microsoft C++>
+87. Robert Machalow (as Author) created <Using Microsoft Works> and <Using Microsoft Excel>
+88. Roi Facal (as Author) created <Microsoft Powerpoint 2003 Nociones Basicas>
+89. Ron Mansfield (as Author) created <Microsoft Office for the Mac Compact Guide>, <The Mac book of Microsoft Word 5>, <Working in Microsoft office>, and <The compact guide to Microsoft Office>
+90. Roy Ageloff (as Author) created <Microsoft Excel 7 for Windows 95 - Advanced>
+91. Sharon Crawford (as Author) created <Faster Smarter Microsoft Windows 98>
+92. Shelley Gaskin (as Author) created <GO! with Microsoft Office 2007 Introductory>
+93. Sheryl A. Sorby (as Author) created <Microsoft Word 6.0 for Engineers>
+94. Sonia Silva (as Author) created <Microsoft Outlook 2003>
+95. Stephen C. Solosky (as Author) created <Microsoft Excel> and <Microsoft Access>
+96. Stephen Hawking (as Businessperson) created <Microsoft Research>
+97. Stephen L. Nelson (as Author) created <MBA's guide to Microsoft Excel 2000>, <Microsoft Excel 97 Field Guide>, <Microsoft Money 98 at a glance>, <Microsoft pocket guide to Microsoft Word 2000>, <Microsoft FrontPage 2000 at a glance>, <Microsoft PowerPoint 97 field guide>, <Microsoft Help Desk for Microsoft Windows Nt Workstation 4.0>, <Ask the expert guide to Microsoft Money 2001>, <Microsoft Access 97 field guide>, <Microsoft Money 99 at a glance>, <Microsoft Windows 98 field guide>, <Microsoft Outlook 2000 At a Glance>, <Microsoft Exchange 5.0 field guide>, <Microsoft Outlook 98 field guide>, <Microsoft Outlook 97 at a glance>, <Field guide to Microsoft Windows 95>, <Microsoft Internet Explorer 4 field guide>, and <Microsoft Word 97 field guide>
+98. Steven Holzner (as Author) created <Microsoft Visual C# .NET 2003 kick start> and <Special Edition Using Microsoft(R)  Office Visio 2007>
+99. Sue Mosher (as Author) created <Microsoft Outlook 2007 Programming>
+100. Syngress Publishing (as Author) created <MCSE Microsoft TCP/IP on Windows NT 4.0 Study Guide>
+101. Thomas J. Cashman (as Author) created <Microsoft Office 2003> and <School Edition of Microsoft Office 2003>
+102. Thomas Rizzo (as Author) created <Professional Microsoft SharePoint search> and <Programacion Con Microsoft Outlook Y Exchange>
+103. Tonya Engst (as Author) created <Microsoft Office 4.2 Survival Guide for Macintosh>
+104. Vanessa Williams (as Author) created <Microsoft SharePoint 2007 For Dummies> and <Microsoft SharePoint 2003 for Dummies>
+105. William R. Pasewark (as Author) created <Microsoft Office 2000>
+106. William R. Trotter (as Author) created <Microsoft close combat - a bridge too far>
+
+
+
+
+
+
+         --------------------------------------------------------------------------------------------------
+        |                                   Indian Premier League(LEAGUE)                                  |
+         --------------------------------------------------------------------------------------------------
+        | Name:             Indian Premier League                                                          |
+         --------------------------------------------------------------------------------------------------
+        | Official Website: http://www.iplt20.com                                                          |
+         --------------------------------------------------------------------------------------------------
+        | Championship:     Indian Premier League Finals                                                   |
+         --------------------------------------------------------------------------------------------------
+        | Teams:            Hyderabad Deccan Chargers                                                      |
+        |                   Rajasthan Royals                                                               |
+        |                   Kings XI Punjab                                                                |
+        |                   Kolkata Knight Riders                                                          |
+        |                   Pune Warriors India                                                            |
+        |                   Delhi Daredevils                                                               |
+        |                   Mumbai Indians                                                                 |
+        |                   Royal Challengers Bangalore                                                    |
+        |                   Chennai Super Kings                                                            |
+        |                   Sunrisers Hyderabad                                                            |
+         --------------------------------------------------------------------------------------------------
+        | Description:      The Indian Premier League is an Indian professional league for men's Twenty20 c|
+        |                   ricket clubs with double round-robin and playoffs. Currently contested by eight|
+        |                    clubs, it is India's primary Twenty20 cricket club competition. Only clubs bas|
+        |                   ed in India are qualify to play in the Premier League. Seasons run in the India|
+        |                   n summer spanning between April and June, with most games are played in the aft|
+        |                   ernoons. In the absence of any Twenty20 cricket league system, the IPL does not|
+        |                    operates on a system of promotion and relegation. The competition was formed b|
+        |                   y the Board of Control for Cricket in India in 2008 after an altercation betwee|
+        |                   n the BCCI and the now-defunct Indian Cricket League. The Premier League is hea|
+        |                   dquartered in Mumbai, Maharashtra, and is currently supervised by BCCI Vice-Pre|
+        |                   sident Ranjib Biswal, who serves as the League's Chairman and Commissioner. The|
+        |                    Premier League is the most-watched Twenty20 cricket league in the world. It is|
+        |                    generally considered to be the highest-profile showcase in the world for Twent|
+        |                   y20 club cricket, the shortest form of professional cricket with just 20 overs |
+        |                   per innings. IPL is as well known for its commercial success and for the qualit|
+        |                   y of Twenty20 cricket played. During the sixth IPL season its brand value was e|
+        |                   stimated to be around US$3.03 billion.                                         |
+         --------------------------------------------------------------------------------------------------
+
+         
+         
+         

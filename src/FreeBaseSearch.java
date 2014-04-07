@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
@@ -31,11 +27,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SuppressWarnings("deprecation")
 public class FreeBaseSearch {
-	
-	
 	static Helper help;
 	static ArrayList<HashMap<String, Object>> infoBoxContentsList;
 	static HashMap<Object, Object> infoBoxResult;
+	
+	/*
+	 * Performs a search using the given query and key and returns an ArrayList of mids and entity names
+	 * */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> searchTest(String query, String key) throws IOException, ParseException, org.json.simple.parser.ParseException
 	{        
@@ -64,7 +62,9 @@ public class FreeBaseSearch {
 	       return mIdAndNameList;
 	}
 	
-	@SuppressWarnings("unchecked")
+	/*
+	 * Looks up a particular topic given a mid and a key. Generates and prints its infobox
+	 */
 	public static boolean topicSearch(String mid, String key) throws ClientProtocolException, IOException, ParseException, org.json.simple.parser.ParseException
 	{
 		
@@ -86,17 +86,10 @@ public class FreeBaseSearch {
 	       
 	       ObjectMapper mapper = new ObjectMapper();       
 	       JSONObject results = (JSONObject)json_data.get("property");
-	       HashMap<String,Object> o  = mapper.readValue(results.toJSONString(), HashMap.class);
 	       JsonNode jNode = mapper.valueToTree(results);
 	      
-	       
-	       
-	       /*if(!jNode.path("/business/board_member/organization_board_memberships").path("values").get(0).path("property").path("/organization/organization_board_membership/from").isMissingNode())
-	       System.out.println(jNode.path("/business/board_member/organization_board_memberships").path("values").get(0).path("property").path("/organization/organization_board_membership/from").path("values").get(0).path("text"));
-	       */
 	       objectTypeInitial(results);
 	       typeOfEntityInitial();
-	       
 	       
 	       //System.out.println(help.typeOfEntity);
 	       
@@ -173,12 +166,10 @@ public class FreeBaseSearch {
 	       return helpfulTopic;
 	}
 	
-	
-	public static void freebaseSearchAndPrintInfobox(String queryTerm, String key) {
-		
-	}
-	
 
+	/*
+	 * Parses a JSON node into a Person type
+	 */
 	public static Person personInit(JsonNode node){
 		Person p = new Person();
 		int count = 0;
@@ -220,7 +211,9 @@ public class FreeBaseSearch {
 		
 	}
 		
-	
+	/*
+	 * Parses a JSON node into an author type
+	 */
 	public static Author authorInit(JsonNode node){
 		Author a = new Author();
 		int count = 0;
@@ -258,6 +251,10 @@ public class FreeBaseSearch {
 		}
 		return a;
 	}
+	
+	/*
+	 * Parses a JSON node into an actor type
+	 */
 	public static Actor actorInit(JsonNode node){
 		Actor a = new Actor();
 		int count = 0;
@@ -275,6 +272,10 @@ public class FreeBaseSearch {
 		}
 		return a;
 	}
+	
+	/*
+	 * Parses a JSON node into a businessperson type
+	 */
 	public static BusinessPerson businessPersonInit(JsonNode node){
 		BusinessPerson bp = new BusinessPerson();
 		int count = 0;
@@ -332,6 +333,11 @@ public class FreeBaseSearch {
 		}
 		return bp;
 	}
+	
+	
+	/*
+	 * Parses a JSON node into a league type
+	 */
 	public static League leagueInit(JsonNode node){
 		League l = new League();
 		int count = 0;
@@ -371,6 +377,10 @@ public class FreeBaseSearch {
 		}
 		return l;
 	}
+	
+	/*
+	 * Parses a JSON node into a sportsteam type
+	 */
 	public static SportsTeam sportsTeamInit(JsonNode node){
 		SportsTeam st = new SportsTeam();
 		int count = 0;
@@ -458,6 +468,9 @@ public class FreeBaseSearch {
 		return st;
 	}
 	
+	/*
+	 * Initialises a global object which holds the data about the types the entity satisfies
+	 */
 	public static void typeOfEntityInitial(){
 		if(help.objectTypes.get("/people/person") == true){
 			help.typeOfEntity.put("Person", true);
@@ -478,6 +491,7 @@ public class FreeBaseSearch {
 			help.typeOfEntity.put("SportsTeam", true);
 		}
 	}
+	
 	/**
 	 * initial object types, define the type of the query result
 	 * @param results the json object from query
@@ -493,6 +507,7 @@ public class FreeBaseSearch {
 	    	}
 	      }
 	}
+	
 	/**
 	 * check if a key is the subkey of another
 	 * @param key
@@ -504,12 +519,6 @@ public class FreeBaseSearch {
 			return true;
 		} else {
 			return false;
-		}
-	}
-	
-	public static void dataSetParser(){
-		for(HashMap<String,Object> o: infoBoxContentsList){
-			o = mapHandler(o);
 		}
 	}
 
@@ -546,7 +555,7 @@ public class FreeBaseSearch {
 	 * Does the HTTP heavywork and returns an ArrayList of HashMaps (constructed from the JSON response) of the resultset.
 	 * Each element of the ArrayList corresponds to one result and each HashMap element holds the key-value pairs defining the result.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "resource" })
 	public static ArrayList<HashMap<String, Object>> freebaseMQLQuery(String query, String key) throws Exception {
 		String service_url = "https://www.googleapis.com/freebase/v1/mqlread";
 		String url = service_url + "?query=" + URLEncoder.encode(makeMQLQuery(query), "UTF-8") + "&key=" + key;
@@ -748,7 +757,7 @@ public class FreeBaseSearch {
 	
 	public static void main(String[] args) throws Exception
 	{
-		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-q","Robert Downey Jr","-f","D:\\q1.txt" ,"-t","infobox"}; //"-q","\"Who", "created","microsoft?\"","",
+		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-f","D:\\q1.txt" ,"-t","infobox"}; //"-q","\"Who", "created","microsoft?\"","",
 		args = args2;
 		
 		String key = getCommandlineParameter("-key", args);
