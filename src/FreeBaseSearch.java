@@ -185,13 +185,15 @@ public class FreeBaseSearch {
 		if(!node.path("/people/person/date_of_birth").path("count").isMissingNode()){
 			count = (int) Double.parseDouble(node.path("/people/person/date_of_birth").path("count").toString());
 			for(int i = 0;i < count; i ++){
-			p.birthday = node.path("/people/person/date_of_birth").path("values").get(i).path("text").toString();
+				p.birthday = node.path("/people/person/date_of_birth").path("values").get(i).path("text").toString();
 			}
 		}
 		if(!node.path("/people/person/sibling_s").path("count").isMissingNode()){
 			count = (int) Double.parseDouble(node.path("/people/person/sibling_s").path("count").toString());
 			for(int i = 0;i < count; i ++){
-			p.siblings.add(node.path("/people/person/sibling_s").path("values").get(i).path("property").path("/people/sibling_relationship/sibling").path("values").get(0).path("text").toString());
+				try {
+				p.siblings.add(node.path("/people/person/sibling_s").path("values").get(i).path("property").path("/people/sibling_relationship/sibling").path("values").get(0).path("text").toString());
+				} catch(Exception e) {}
 			}
 		}
 		if(!node.path("/people/person/place_of_birth").path("count").isMissingNode()){
@@ -203,7 +205,9 @@ public class FreeBaseSearch {
 		if(!node.path("/people/person/spouse_s").path("count").isMissingNode()){
 			count = (int) Double.parseDouble(node.path("/people/person/spouse_s").path("count").toString());
 			for(int i = 0;i < count; i ++){
+				try {
 			p.spouses.add(node.path("/people/person/spouse_s").path("values").get(i).path("property").path("/people/marriage/spouse").path("values").get(0).path("text").toString());
+				} catch(Exception e) {}
 			}
 		}
 		if(!node.path("/common/topic/description").path("count").isMissingNode()){
@@ -223,7 +227,9 @@ public class FreeBaseSearch {
 		if(!node.path("/book/author/works_written").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/book/author/works_written").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			try {
 		a.books.add(node.path("/book/author/works_written").path("values").get(i).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		if(!node.path("/book/book_subject/works").path("count").isMissingNode()){
@@ -237,13 +243,17 @@ public class FreeBaseSearch {
 		if(!node.path("/influence/influence_node/influenced").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/influence/influence_node/influenced").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			try {
 		a.influenced.add(node.path("/influence/influence_node/influenced").path("values").get(i).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		if(!node.path("/influence/influence_node/influenced_by").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/influence/influence_node/influenced_by").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			try {
 		a.influencedBy.add(node.path("/influence/influence_node/influenced_by").path("values").get(i).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		return a;
@@ -271,7 +281,9 @@ public class FreeBaseSearch {
 		if(!node.path("/organization/organization_founder/organizations_founded").path("count").isMissingNode()){
 			count = (int) Double.parseDouble(node.path("/organization/organization_founder/organizations_founded").path("count").toString());
 			for(int i = 0;i < count; i ++){
+				try {
 			bp.founded.add(node.path("/organization/organization_founder/organizations_founded").path("values").get(i).path("text").toString());
+				} catch(Exception e) {}
 			}
 		}
 		
@@ -281,6 +293,7 @@ public class FreeBaseSearch {
 			
 			count = (int) Double.parseDouble(node.path("/business/board_member/organization_board_memberships").path("count").toString());
 			for(int i = 0;i < count; i ++){
+				try {
 				BoardMember bm = new BoardMember();
 				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").isMissingNode())
 				bm.organization = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").path("values").get(0).path("text").toString();
@@ -293,12 +306,14 @@ public class FreeBaseSearch {
 				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/to").isMissingNode())
 				bm.to = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/to").path("values").get(0).path("text").toString();
 				bp.boardMembers.add(bm);
+				} catch(Exception e) {}
 			}
 		}
 		
 		if(!node.path("/business/board_member/leader_of").path("count").isMissingNode()){
 			count = (int) Double.parseDouble(node.path("/business/board_member/leader_of").path("count").toString());
 			for(int i = 0;i < count; i ++){
+				try {
 				Leadership ls = new Leadership();
 				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/from").isMissingNode())
 				ls.from = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/from").path("values").get(0).path("text").toString();
@@ -311,6 +326,7 @@ public class FreeBaseSearch {
 				if(!node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/title").isMissingNode())
 				ls.title = node.path("/business/board_member/leader_of").path("values").get(i).path("property").path("/organization/leadership/title").path("values").get(0).path("text").toString();
 				bp.leaderships.add(ls);
+				} catch(Exception e) {}
 			}
 			
 		}
@@ -371,7 +387,9 @@ public class FreeBaseSearch {
 		if(!node.path("/sports/sports_team/championships").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/championships").path("count").toString());
 		for(int i = 0; i < count; i++){
+			try {
 			st.championships.add(node.path("/sports/sports_team/championships").path("values").get(i).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		if(!node.path("/sports/sports_team/coaches").path("count").isMissingNode()){
@@ -398,7 +416,9 @@ public class FreeBaseSearch {
 		if(!node.path("/sports/sports_team/location").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/location").path("count").toString());
 		for(int i = 0; i < count; i++){
+			try {
 			st.locations.add(node.path("/sports/sports_team/location").path("values").get(i).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		
