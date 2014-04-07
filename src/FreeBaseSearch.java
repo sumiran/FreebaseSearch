@@ -27,11 +27,7 @@ import org.json.simple.parser.JSONParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-/**
- * It still has some issues such as has some useless words, and some FreeBaseEntity did
- * not include in the search filed, but the professor's demo has it, such as NBA  slogan part
- * 
- */
+
 
 @SuppressWarnings("deprecation")
 public class FreeBaseSearch {
@@ -41,12 +37,12 @@ public class FreeBaseSearch {
 	static ArrayList<HashMap<String, Object>> infoBoxContentsList;
 	static HashMap<Object, Object> infoBoxResult;
 	@SuppressWarnings("unchecked")
-	public static void searchTest(String query) throws IOException, ParseException, org.json.simple.parser.ParseException
+	public static ArrayList<String> searchTest(String query, String key) throws IOException, ParseException, org.json.simple.parser.ParseException
 	{        
 	       String service_url = "https://www.googleapis.com/freebase/v1/search";      
 
 	       String url = service_url    + "?query=" + URLEncoder.encode(query, "UTF-8")
-	                                    + "&key=AIzaSyCbbYRSqL848PVdRRE3BXRFJ1i8TS-TxRE";     
+	                                    + "&key="+key;     
 
 	       @SuppressWarnings("resource")
 	       HttpClient httpclient = new DefaultHttpClient();   
@@ -58,61 +54,130 @@ public class FreeBaseSearch {
 
 	       ObjectMapper mapper = new ObjectMapper();
 	       HashMap<String,Object> result = mapper.readValue(json_data.toString(), HashMap.class);
+	       
+	       ArrayList<HashMap<String, Object>> resultSet = (ArrayList<HashMap<String, Object>>)result.get("result");
+	       ArrayList<String> mIdAndNameList = new ArrayList<String>();
+	       for(HashMap<String, Object> h : resultSet) {
+	    	   mIdAndNameList.add(((String) h.get("mid"))+":"+h.get("name"));
+	       }
+	       
+	       return mIdAndNameList;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void topicSearch(String mid) throws ClientProtocolException, IOException, ParseException, org.json.simple.parser.ParseException
+	public static boolean topicSearch(String mid, String key) throws ClientProtocolException, IOException, ParseException, org.json.simple.parser.ParseException
 	{
+		
+			boolean helpfulTopic = false;
+			
 			help = new Helper();
-		   String service_url = "https://www.googleapis.com/freebase/v1/topic";      
-	       String url = service_url + mid;
+			String service_url = "https://www.googleapis.com/freebase/v1/topic";      
+	       String url = service_url + mid + "?key="+key;
 
 	       @SuppressWarnings("resource")
 	       HttpClient httpclient = new DefaultHttpClient();   
 	       HttpResponse response = httpclient.execute(new HttpGet(url));  
 
 	       JSONParser parser = new JSONParser();
-	       JSONObject json_data = 
-	       (JSONObject)parser.parse(EntityUtils.toString(response.getEntity()));
+	       JSONObject json_data = (JSONObject)parser.parse(EntityUtils.toString(response.getEntity()));
 
+	       @SuppressWarnings("unused")
+			String x = json_data.toString();
+	       
 	       ObjectMapper mapper = new ObjectMapper();       
 	       JSONObject results = (JSONObject)json_data.get("property");
 	       HashMap<String,Object> o  = mapper.readValue(results.toJSONString(), HashMap.class);
 	       JsonNode jNode = mapper.valueToTree(results);
 	      
+	       
+	       
 	       /*if(!jNode.path("/business/board_member/organization_board_memberships").path("values").get(0).path("property").path("/organization/organization_board_membership/from").isMissingNode())
 	       System.out.println(jNode.path("/business/board_member/organization_board_memberships").path("values").get(0).path("property").path("/organization/organization_board_membership/from").path("values").get(0).path("text"));
 	       */
 	       objectTypeInitial(results);
 	       typeOfEntityInitial();
-	       System.out.println(help.typeOfEntity);
-	       businessPersonInit(jNode);
-	       authorInit(jNode);
-	       actorInit(jNode);
-	       leagueInit(jNode);
-	       sportsTeamInit(jNode);
-	       personInit(jNode);
 	       
 	       
-	       Set<String> key = o.keySet();
-	       infoBoxContentsList = new ArrayList<HashMap<String, Object>>();
+	       //System.out.println(help.typeOfEntity);
 	       
-	       for(String k: key){
-	    	   for(String e: Helper.freeBaseEntities){    		 
-	    		   if(FreeBaseSearch.checkIsSubKey(e, k)){
-	    			  
-	    			   String newKey = keyRename(k);
-	    			   Object obj = (HashMap<?, ?>) o.get(k);
-	    			   HashMap<String,Object> newMap = new HashMap<String,Object>();    			   
-	    			   newMap.put(newKey, obj);
-	    			   infoBoxContentsList.add(newMap);	    			   
-	    		   }
-	    	   }
+	       System.out.print("Type of entity:"+Entity.whiteSpaceOfLength(Entity.headingColLength - "Type of entity:".length()));
+	       for(String k : help.typeOfEntity.keySet()) {
+	    	   System.out.print(help.typeOfEntity.get(k)?k+" ":"");
+	       }
+	       System.out.println("\n"+Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+	       
+	       BusinessPerson bp = businessPersonInit(jNode);
+	       Author auth = authorInit(jNode);
+	       Actor act = actorInit(jNode);
+	       League l = leagueInit(jNode);
+	       SportsTeam st = sportsTeamInit(jNode);
+	       Person p = personInit(jNode);
+	       
+	       ArrayList<String> data;
+	       
+	       if(help.typeOfEntity.get("Person")) {
+	    	   helpfulTopic = true;
+		       data = p.getInfoRows();
+		       for(String row : data) {
+		    	   System.out.println(row);
+		    	   System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+		       }
 	       }
 	       
-	       dataSetParser();
-
+	       if(help.typeOfEntity.get("BusinessPerson")) {
+	    	   helpfulTopic = true;
+		       data = bp.getInfoRows();
+		       for(String row : data) {
+		    	   System.out.println(row);
+		    	   System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+		       }
+	       }
+	       
+	       if(help.typeOfEntity.get("Author")) {
+	    	   helpfulTopic = true;
+		       data = auth.getInfoRows();
+		       for(String row : data) {
+		    	   System.out.println(row);
+		    	   System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+		       }
+	       }
+	       
+	       if(help.typeOfEntity.get("Actor")) {
+	    	   helpfulTopic = true;
+		       data = act.getInfoRows();
+		       for(String row : data) {
+		    	   System.out.println(row);
+		    	   System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+		       }
+	       }
+	       
+	       if(help.typeOfEntity.get("SportsTeam")) {
+	    	   helpfulTopic = true;
+		       data = st.getInfoRows();
+		       for(String row : data) {
+		    	   System.out.println(row);
+		    	   System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+		       }
+	       }
+	       
+	       if(help.typeOfEntity.get("League")) {
+	    	   helpfulTopic = true;
+		       data = l.getInfoRows();
+		       for(String row : data) {
+		    	   System.out.println(row);
+		    	   System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+		       }
+	       }
+	       
+	       
+	       return helpfulTopic;
 	}
+	
+	
+	public static void freebaseSearchAndPrintInfobox(String queryTerm, String key) {
+		
+	}
+	
 
 	public static Person personInit(JsonNode node){
 		Person p = new Person();
@@ -164,7 +229,9 @@ public class FreeBaseSearch {
 		if(!node.path("/book/book_subject/works").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/book/book_subject/works").path("count").toString());
 		for(int i = 0;i < count; i ++){
+			try {
 		a.booksAbout.add(node.path("/book/book_subject/works").path("values").get(i).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		if(!node.path("/influence/influence_node/influenced").path("count").isMissingNode()){
@@ -187,10 +254,13 @@ public class FreeBaseSearch {
 		if(!node.path("/film/actor/film").path("count").isMissingNode()){
 			count = (int) Double.parseDouble(node.path("/film/actor/film").path("count").toString());
 			for(int i = 0;i < count; i ++){
-				
-			a.characters.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/character").path("values").get(0).path("text").toString());
-			a.filmName.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/film").path("values").get(0).path("text").toString());
 			
+				try {
+			if(!node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/character").isMissingNode())	
+				a.characters.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/character").path("values").get(0).path("text").toString());
+			if(!node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/film").isMissingNode())
+				a.filmName.add(node.path("/film/actor/film").path("values").get(i).path("property").path("/film/performance/film").path("values").get(0).path("text").toString());
+				} catch(Exception e) {}
 			}
 		}
 		return a;
@@ -208,9 +278,10 @@ public class FreeBaseSearch {
 		
 		if(!node.path("/business/board_member/organization_board_memberships").path("count").isMissingNode())
 		{
-			BoardMember bm = new BoardMember();
+			
 			count = (int) Double.parseDouble(node.path("/business/board_member/organization_board_memberships").path("count").toString());
 			for(int i = 0;i < count; i ++){
+				BoardMember bm = new BoardMember();
 				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").isMissingNode())
 				bm.organization = node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/organization").path("values").get(0).path("text").toString();
 				if(!node.path("/business/board_member/organization_board_memberships").path("values").get(i).path("property").path("/organization/organization_board_membership/title").isMissingNode())
@@ -255,7 +326,7 @@ public class FreeBaseSearch {
 			l.championship = node.path("/sports/sports_league/championship").path("values").get(i).path("text").toString();
 			if(!node.path("/sports/sports_league/sport").isMissingNode())
 			l.sport = node.path("/sports/sports_league/sport").path("values").get(i).path("text").toString();
-			if(!node.path("/sports/sports_league/official_website").isMissingNode())
+			if(!node.path("/common/topic/official_website").isMissingNode())
 			l.website = node.path("/common/topic/official_website").path("values").get(i).path("text").toString();
 			if(!node.path("/organization/organization/slogan").isMissingNode())
 			l.slogan = node.path("/organization/organization/slogan").path("values").get(i).path("text").toString();
@@ -264,16 +335,27 @@ public class FreeBaseSearch {
 			
 		}
 		}
+		
 		if(!node.path("/sports/sports_league/teams").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_league/teams").path("count").toString());
+		
+		if(!node.path("/common/topic/description").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/common/topic/description").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			l.description = node.path("/common/topic/description").path("values").get(0).path("value").toString();
+			}
+		}
+		
 		for(int i = 0;i < count; i ++){
+			try {
 			if(!node.path("/sports/sports_league/teams").isMissingNode() && !node.path("/sports/sports_league/teams").path("values").get(i).path("property").path("/sports/sports_league_participation/team").isMissingNode())
 			l.teams.add(node.path("/sports/sports_league/teams").path("values").get(i).path("property").path("/sports/sports_league_participation/team").path("values").get(0).path("text").toString());
+			} catch(Exception e) {}
 		}
 		}
 		return l;
 	}
-	public static void sportsTeamInit(JsonNode node){
+	public static SportsTeam sportsTeamInit(JsonNode node){
 		SportsTeam st = new SportsTeam();
 		int count = 0;
 		if(!node.path("/sports/sports_team/sport").path("count").isMissingNode()){
@@ -295,27 +377,49 @@ public class FreeBaseSearch {
 		if(!node.path("/sports/sports_team/coaches").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/coaches").path("count").toString());
 		for(int i = 0; i < count; i++){
+			try {
 			Coach c = new Coach();
 			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/coach").isMissingNode())
 			c.name = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/coach").path("values").get(0).path("text").toString();
-			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").isMissingNode())
-			c.from = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").path("values").get(0).path("text").toString();
+			
 			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/position").isMissingNode())
 			c.position = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/position").path("values").get(0).path("text").toString();
+			
+			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").isMissingNode())
+				c.from = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/from").path("values").get(0).path("text").toString();
+			
 			if(!node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/to").isMissingNode())
-			c.to = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/to").path("values").get(0).path("text").toString();
+				c.to = node.path("/sports/sports_team/coaches").path("values").get(i).path("property").path("/sports/sports_team_coach_tenure/to").path("values").get(0).path("text").toString();
 			st.coaches.add(c);
+			} catch(Exception e) {}
 		}
 		}
+		
 		if(!node.path("/sports/sports_team/location").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/location").path("count").toString());
 		for(int i = 0; i < count; i++){
 			st.locations.add(node.path("/sports/sports_team/location").path("values").get(i).path("text").toString());
 		}
 		}
+		
+		if(!node.path("/common/topic/description").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/common/topic/description").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			st.description = node.path("/common/topic/description").path("values").get(0).path("value").toString();
+			}
+		}
+		
+		if(!node.path("/sports/sports_team/founded").path("count").isMissingNode()){
+			count = (int) Double.parseDouble(node.path("/sports/sports_team/founded").path("count").toString());
+			for(int i = 0;i < count; i ++){
+			st.founded = node.path("/sports/sports_team/founded").path("values").get(0).path("value").toString();
+			}
+		}
+		
 		if(!node.path("/sports/sports_team/roster").path("count").isMissingNode()){
 		count = (int) Double.parseDouble(node.path("/sports/sports_team/roster").path("count").toString());
 		for(int i = 0; i < count; i++){
+			try {
 			PlayersRoster pr = new PlayersRoster();
 			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/player").isMissingNode())
 			pr.name = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/player").path("values").get(0).path("text").toString();
@@ -328,8 +432,10 @@ public class FreeBaseSearch {
 			if(!node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/to").isMissingNode())
 			pr.to = node.path("/sports/sports_team/roster").path("values").get(i).path("property").path("/sports/sports_team_roster/to").path("values").get(0).path("text").toString();
 			st.playersRosters.add(pr);
+			} catch(Exception e) {}
 		}
 		}
+		return st;
 	}
 	
 	public static void typeOfEntityInitial(){
@@ -622,14 +728,7 @@ public class FreeBaseSearch {
 	
 	public static void main(String[] args) throws Exception
 	{
-		System.out.println("New Ver");
-		topicSearch("/m/017nt");
-		
-
-		return;
-		
-		/*
-		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-q","" ,"-t","question"}; //"-q","\"Who", "created","microsoft?\"","",
+		String[] args2 = {"-key","AIzaSyDFgRTZ_yfvXwf_t46ovPHC0WlnJ2Ny_hM","-q","Robert Downey Jr","-f","D:\\q1.txt" ,"-t","infobox"}; //"-q","\"Who", "created","microsoft?\"","",
 		args = args2;
 		
 		String key = getCommandlineParameter("-key", args);
@@ -642,7 +741,7 @@ public class FreeBaseSearch {
 		System.out.println("Filename (-f): \""+fileName+"\"");
 		System.out.println("Mode (-t): \""+mode+"\"");
 		System.out.println("Query (-q): \""+query+"\"");
-		System.out.println("\nRunning the "+ (fileName.equals("")?"query from commandline":"queries from file") +" as a "+ (mode.equalsIgnoreCase("question")?"question":"infobox") +"...");
+		System.out.println("\nRunning the "+ (fileName.equals("")?"query from commandline":"queries from file") +" in "+ (mode.equalsIgnoreCase("question")?"question":"infobox") +" mode...");
 		System.out.println("\n\n");
 		
 		ArrayList<String> queries = null; 
@@ -670,16 +769,27 @@ public class FreeBaseSearch {
 		if(mode.equalsIgnoreCase("question")) {
 			for(String q : queries) {
 				if(!q.trim().equals("")) {
-					System.out.println("Executing query for "+q+": ");
-					
+					System.out.println("Asking freebase: "+q+": ");
 					ArrayList<Creator> c = getCreatedList(freebaseMQLQuery(getObjectFromUserQuery(q), key));
 					System.out.println(printCreatedListToString(c));
 				}
 			}
 		} else {
-			
+			for(String q : queries) {
+				System.out.println("Querying for: "+q);
+				ArrayList<String> mids = searchTest(q, key);
+				for(String mid : mids) {
+					System.out.println("Found an entity: "+mid.split(":")[1]);
+					System.out.println("Name:"+Entity.whiteSpaceOfLength(Entity.headingColLength - "Name:".length())+mid.split(":")[1]);
+					System.out.println(Entity.repeatedCharacterOfLength(Entity.rowLength, "-"));
+					if(topicSearch(mid.split(":")[0], key)) {
+						break;
+					}
+				}
+			}
 		}
-		*/
+		
+		System.out.println("----Done----");
 		
 	}
 }

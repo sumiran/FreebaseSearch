@@ -16,7 +16,7 @@ public Helper(){
 	map.put("Actor", false);
 	map.put("BusinessPerson", false);
 	map.put("League", false);
-	map.put("Sports", false);
+	map.put("SportsTeam", false);
 	typeOfEntity = map;
 	
 	HashMap<String, Boolean> maps = new HashMap<String, Boolean>();
